@@ -7,7 +7,7 @@ use FakeUpload qw(fake_upload);
 use Data::FormValidator;
 use Data::FormValidator::Filters::Image qw(image_filter);
 use Image::Size qw(imgsize);
-use File::Slurp qw(slurp);
+use File::Slurp qw(read_file);
 use File::stat;
 use Test::More tests => 30;
 
@@ -38,7 +38,7 @@ image_exceeds_max_height: {
 
     my $valid    = $results->valid();       # get the valid data
     my $image_fh = $valid->{image};         # the Fh for the uploaded image
-    my $image    = slurp($image_fh);        # slurp in the image data
+    my $image    = read_file($image_fh);        # slurp in the image data
     my ($img_w, $img_h) = imgsize(\$image); # height/width of image
 
     is $img_w, 37, '... image width';
@@ -65,7 +65,7 @@ image_exceeds_max_width: {
 
     my $valid    = $results->valid();       # get the valid data
     my $image_fh = $valid->{image};         # the Fh for the uploaded image
-    my $image    = slurp($image_fh);        # slurp in the image data
+    my $image    = read_file($image_fh);        # slurp in the image data
     my ($img_w, $img_h) = imgsize(\$image); # height/width of image
 
     is $img_w, 50, '... image width';
@@ -91,7 +91,7 @@ image_exceeds_max_width_no_max_height: {
 
     my $valid    = $results->valid();       # get the valid data
     my $image_fh = $valid->{image};         # the Fh for the uploaded image
-    my $image    = slurp($image_fh);        # slurp in the image data
+    my $image    = read_file($image_fh);        # slurp in the image data
     my ($img_w, $img_h) = imgsize(\$image); # height/width of image
 
     is $img_w, 50, '... image width';
@@ -117,7 +117,7 @@ image_exceeds_max_height_no_max_width: {
 
     my $valid    = $results->valid();       # get the valid data
     my $image_fh = $valid->{image};         # the Fh for the uploaded image
-    my $image    = slurp($image_fh);        # slurp in the image data
+    my $image    = read_file($image_fh);        # slurp in the image data
     my ($img_w, $img_h) = imgsize(\$image); # height/width of image
 
     is $img_w, 37, '... image width';
@@ -141,7 +141,7 @@ image_no_options_given: {
 
     my $valid    = $results->valid();       # get the valid data
     my $image_fh = $valid->{image};         # the Fh for the uploaded image
-    my $image    = slurp($image_fh);        # slurp in the image data
+    my $image    = read_file($image_fh);        # slurp in the image data
     my ($img_w, $img_h) = imgsize(\$image); # height/width of image
 
     is $img_w,  75, '... image width';
@@ -174,7 +174,7 @@ image_already_within_max_limits: {
 
     my $valid    = $results->valid();       # get the valid data
     my $image_fh = $valid->{image};         # the Fh for the uploaded image
-    my $image    = slurp($image_fh);        # slurp in the image data
+    my $image    = read_file($image_fh);        # slurp in the image data
     my ($img_w, $img_h) = imgsize(\$image); # height/width of image
 
     is $img_w,  75, '... image width';
@@ -204,7 +204,7 @@ image_empty: {
 
     my $valid    = $results->valid();       # get the valid data
     my $image_fh = $valid->{image};         # the Fh for the uploaded image
-    my $image    = slurp($image_fh);        # slurp in the image data
+    my $image    = read_file($image_fh);        # slurp in the image data
     is length($image), 0, '... empty image';
 }
 
@@ -229,7 +229,7 @@ image_msie_style_path: {
 
     my $valid    = $results->valid();       # get the valid data
     my $image_fh = $valid->{image};         # the Fh for the uploaded image
-    my $image    = slurp($image_fh);        # slurp in the image data
+    my $image    = read_file($image_fh);        # slurp in the image data
     my ($img_w, $img_h) = imgsize(\$image); # height/width of image
 
     is $img_w, 37, '... image width';
@@ -256,7 +256,7 @@ text_file_is_untouched : {
 
     my $valid    = $results->valid();       # get the valid data
     my $text_fh  = $valid->{text};          # the Fh for the uploaded text
-    my @text     = slurp($text_fh);         # slurp in the text data
+    my @text     = read_file($text_fh);         # slurp in the text data
 
     is scalar @text, 1, '... one line of text data';
     like $text[0], qr/^This is a dummy file$/, '... containing our test data';
