@@ -27,7 +27,7 @@ Data::FormValidator::Filters::Image - Filter that allows you to shrink incoming 
 
     # Be sure to use a CGI.pm object as the form input
     # when using this filter
-    my $q = new CGI;
+    my $q = CGI->new;
     my $dfv = Data::FormValidator->check($q,$my_profile);
 
 =head1 DESCRIPTION
@@ -160,7 +160,7 @@ sub __shrink_image {
     $seqno += int rand(100);
     my $newfh;
     for ( my $cnt = 10 ; $cnt > 0 ; $cnt-- ) {
-        next unless my $tmpfile = new CGITempFile($seqno);
+        next unless my $tmpfile = CGITempFile->new($seqno);
         $tmp_filename = $tmpfile->as_string;
         last
           if defined( $newfh = Fh->new( $filename, $tmp_filename, 0 ) );
